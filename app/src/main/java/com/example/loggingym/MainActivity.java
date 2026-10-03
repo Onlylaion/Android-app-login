@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        SesionHelper.iniciarSesion(this, usuario.dni);
-        SesionHelper.sumarPersonaLogueada(this);
+        SesionHelper.saveUsuario(this, usuario.dni);
+        //SesionHelper.sumarPersonaEnGym(this);
         AppDatabase.obtenerInstancia(this).ingresoAppDao()
                 .registrarIngreso(new IngresoApp(usuario.dni, usuario.nombre, System.currentTimeMillis()));
 

@@ -10,9 +10,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_gympro"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_gympro"
         android:supportsRtl="true"
         android:theme="@style/Theme.LogginGym">
         <activity
@@ -30,15 +30,20 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".cantidadPersonasGym"
+            android:name=".CantidadPersonasGym"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".verPagos"
+            android:name=".VerPagos"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <service android:name="info.mqtt.android.service.MqttService" />
+
+        <activity
+            android:name=".AbrirPuerta"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

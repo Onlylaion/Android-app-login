@@ -16,9 +16,10 @@
         tools:layout_editor_absoluteY="-84dp">
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnAbrirPuerta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="abrirPuerta"
             android:text="Abrir Puerta" />
 
         <Button
@@ -26,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="clip_horizontal|center"
-            android:onClick="verEstadistica"
+            android:onClick="verPersonasEnGym"
             android:text="Ver la cantidad de personas en el gym ahora" />
 
         <Button

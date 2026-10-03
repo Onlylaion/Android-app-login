@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class verPagos extends AppCompatActivity {
+public class VerPagos extends AppCompatActivity {
 
     private static final double MONTO_CUOTA = 15000.0;
 

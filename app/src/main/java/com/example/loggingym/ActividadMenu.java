@@ -10,10 +10,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import info.mqtt.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.*;
-import android.util.Log;
-
 public class ActividadMenu extends AppCompatActivity {
 
     @Override
@@ -26,51 +22,30 @@ public class ActividadMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        String brokerUri = "tcp://127.0.0.1:1883";
-        String clientId = "AppGym_" + System.currentTimeMillis();
-
-        MqttAndroidClient mqttClient = new MqttAndroidClient(getApplicationContext(), brokerUri, clientId);
-
-        mqttClient.connect(new MqttConnectOptions(), null, new IMqttActionListener() {
-            @Override
-            public void onSuccess(IMqttToken asyncActionToken) {
-                Log.d("MQTT", "Conectado al broker");
-                mqttClient.subscribe("gimnasio/puerta/estado", 0);
-            }
-            @Override
-            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                Log.e("MQTT", "Fallo la conexión", exception);
-            }
-        });
-
-        mqttClient.setCallback(new MqttCallback() {
-            @Override
-            public void messageArrived(String topic, MqttMessage message) {
-                String payload = new String(message.getPayload());
-                Log.d("MQTT", "Llegó: " + payload + " en topic: " + topic);
-            }
-            @Override public void connectionLost(Throwable cause) {
-                Log.e("MQTT", "Se perdió la conexión", cause);
-            }
-            @Override public void deliveryComplete(IMqttDeliveryToken token) { }
-        });
     }
 
-    public void salir(View v){
+    public void salir(View v) {
         SesionHelper.cerrarSesion(this);
-        SesionHelper.restarPersonaLogueada(this);
+        MQTTManager.obtener(this).desconectar();
+        //SesionHelper.restarPersonaEnGym(this);
         Intent intento = new Intent(this, MainActivity.class);
-        intento.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intento.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intento.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intento);
         finish();
     }
-    public void verEstadistica(View v){
-        Intent intento = new Intent(this, cantidadPersonasGym.class);
+
+    public void verPersonasEnGym(View v) {
+        Intent intento = new Intent(this, CantidadPersonasGym.class);
         startActivity(intento);
     }
-    public void verPagos(View v){
-        Intent intento = new Intent(this, verPagos.class);
+    public void verPagos(View v) {
+        Intent intento = new Intent(this, VerPagos.class);
         startActivity(intento);
+    }
+
+    public void abrirPuerta(View v) {
+        Intent intent = new Intent(this, AbrirPuerta.class);
+        startActivity(intent);
     }
 }

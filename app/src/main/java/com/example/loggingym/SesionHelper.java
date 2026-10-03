@@ -7,12 +7,12 @@ public final class SesionHelper {
 
     private static final String PREFS_NOMBRE = "loggingym_prefs";
     private static final String CLAVE_USUARIO_DNI = "usuario_dni";
-    private static final String CLAVE_PERSONAS_LOGUEADAS = "personas_logueadas_app";
+    private static final String CLAVE_CANTIDAD_PERSONAS_GYM = "cantidad_personas_gym";
 
     private SesionHelper() {
     }
 
-    public static void iniciarSesion(Context context, String dni) {
+    public static void saveUsuario(Context context, String dni) {
         obtenerPrefs(context).edit()
                 .putString(CLAVE_USUARIO_DNI, dni)
                 .apply();
@@ -32,22 +32,22 @@ public final class SesionHelper {
                 .apply();
     }
 
-    public static void sumarPersonaLogueada(Context context) {
-        int actual = obtenerPersonasLogueadas(context);
+    public static void sumarPersonaEnGym(Context context) {
+        int actual = obtenerPersonasEnGym(context);
         obtenerPrefs(context).edit()
-                .putInt(CLAVE_PERSONAS_LOGUEADAS, actual + 1)
+                .putInt(CLAVE_CANTIDAD_PERSONAS_GYM, actual + 1)
                 .apply();
     }
 
-    public static void restarPersonaLogueada(Context context) {
-        int actual = obtenerPersonasLogueadas(context);
+    public static void restarPersonaEnGym(Context context) {
+        int actual = obtenerPersonasEnGym(context);
         obtenerPrefs(context).edit()
-                .putInt(CLAVE_PERSONAS_LOGUEADAS, Math.max(0, actual - 1))
+                .putInt(CLAVE_CANTIDAD_PERSONAS_GYM, Math.max(0, actual - 1))
                 .apply();
     }
 
-    public static int obtenerPersonasLogueadas(Context context) {
-        return obtenerPrefs(context).getInt(CLAVE_PERSONAS_LOGUEADAS, 0);
+    public static int obtenerPersonasEnGym(Context context) {
+        return obtenerPrefs(context).getInt(CLAVE_CANTIDAD_PERSONAS_GYM, 0);
     }
 
     private static SharedPreferences obtenerPrefs(Context context) {

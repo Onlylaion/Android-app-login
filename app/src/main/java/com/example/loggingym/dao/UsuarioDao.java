@@ -1,8 +1,10 @@
-package com.example.loggingym;
+package com.example.loggingym.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.loggingym.Usuario;
 
 @Dao
 public interface UsuarioDao {
