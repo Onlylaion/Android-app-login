@@ -24,7 +24,7 @@ public class ActividadMenu extends AppCompatActivity {
         });
     }
 
-    public void salir(View v) {
+    public void cerrarSesion(View v) {
         SesionHelper.cerrarSesion(this);
         MQTTManager.obtener(this).desconectar();
         //SesionHelper.restarPersonaEnGym(this);
@@ -44,8 +44,8 @@ public class ActividadMenu extends AppCompatActivity {
         startActivity(intento);
     }
 
-    public void abrirPuerta(View v) {
-        Intent intent = new Intent(this, AbrirPuerta.class);
+    public void goToActivityAperturaPuerta(View v) {
+        Intent intent = new Intent(this, AperturaPuerta.class);
         startActivity(intent);
     }
 }

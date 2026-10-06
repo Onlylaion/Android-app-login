@@ -39,8 +39,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static void precargarUsuariosDePrueba(AppDatabase db) {
         new Thread(() -> {
-            if (db.usuarioDao().validarLogin("12345678", "1234") == null) {
-                db.usuarioDao().insertar(new Usuario("12345678", "1234", "León"));
+            if (db.usuarioDao().validarLogin("1234567", "1234") == null) {
+                db.usuarioDao().insertar(new Usuario("1234567", "1234", "León"));
             }
             if (db.usuarioDao().validarLogin("87654321", "1212") == null) {
                 db.usuarioDao().insertar(new Usuario("87654321", "1212", "Leon"));

@@ -28,10 +28,13 @@ public final class MQTTManager {
     private static final String PREFS_NOMBRE = "mqtt_prefs";
     private static final String CLAVE_CLIENT_ID = "client_id";
 
-    public static final String TOPIC_PUERTA_ESTADO = "gimnasio/puerta/estado";
+    public static final String TOPIC_PUERTA_ESTADO = "gimnasio/puerta/apertura";
+
+    public static final String TOPIC_COMANDO = "gimnasio/puerta/comando";
+
     public static final String TOPIC_OCUPACION = "gimnasio/ocupacion/cantidad";
 
-    private static final String[] TOPICS_SUSCRIPCION = {TOPIC_PUERTA_ESTADO, TOPIC_OCUPACION};
+    private static final String[] TOPICS_SUSCRIPCION = {TOPIC_PUERTA_ESTADO, TOPIC_OCUPACION, TOPIC_COMANDO};
 
     public interface Listener {
         void onMensaje(String topic, String payload);
