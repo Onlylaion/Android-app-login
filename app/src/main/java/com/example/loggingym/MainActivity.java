@@ -12,11 +12,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.loggingym.api.ApiClient;
+import com.example.loggingym.api.dto.LoginRequest;
+import com.example.loggingym.api.dto.LoginResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText campoDni;
     private EditText campoContrasenia;
     private TextView textoError;
+    private Button botonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         campoContrasenia = findViewById(R.id.input_contrasenia);
         textoError = findViewById(R.id.texto_error);
 
-        Button botonLogin = findViewById(R.id.boton_login);
+        botonLogin = findViewById(R.id.boton_login);
         botonLogin.setOnClickListener(v -> intentarLogin());
     }
 
@@ -52,17 +61,37 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Usuario usuario = AppDatabase.obtenerInstancia(this).usuarioDao().validarLogin(dni, contrasenia);
+        botonLogin.setEnabled(false);
+        textoError.setVisibility(TextView.GONE);
 
-        if (usuario == null) {
-            mostrarError("DNI o contraseña incorrectos");
-            return;
-        }
+        ApiClient.obtener(this).login(new LoginRequest(dni, contrasenia))
+                .enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> respuesta) {
+                        botonLogin.setEnabled(true);
+                        if (respuesta.isSuccessful() && respuesta.body() != null) {
+                            loginExitoso(dni, respuesta.body().token);
+                        } else if (respuesta.code() == 422) {
+                            mostrarError("El DNI debe tener 7 u 8 números");
+                        } else {
+                            mostrarError(ApiClient.mensajeDeError(respuesta, "Error del servidor (" + respuesta.code() + ")"));
+                        }
+                    }
 
-        SesionHelper.saveUsuario(this, usuario.dni);
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        botonLogin.setEnabled(true);
+                        mostrarError("No se pudo conectar con el servidor");
+                    }
+                });
+    }
+
+    private void loginExitoso(String dni, String token) {
+        SesionHelper.saveUsuario(this, dni);
+        SesionHelper.guardarToken(this, token);
         //SesionHelper.sumarPersonaEnGym(this);
         AppDatabase.obtenerInstancia(this).ingresoAppDao()
-                .registrarIngreso(new IngresoApp(usuario.dni, usuario.nombre, System.currentTimeMillis()));
+                .registrarIngreso(new IngresoApp(dni, null, System.currentTimeMillis()));
 
         irAMenuPrincipal();
     }

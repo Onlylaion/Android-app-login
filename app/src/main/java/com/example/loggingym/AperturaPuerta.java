@@ -12,20 +12,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.loggingym.api.ApiClient;
+import com.example.loggingym.api.dto.ResultadoResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AperturaPuerta extends AppCompatActivity {
 
     private String dni = null;
     private TextView textViewNumeroDni;
     private Button btnComandoAbrir;
-
-    private final MQTTManager.Listener listenerApertura = (topic, payload) -> {
-      try {
-          mostrarPuertaAbierta();
-      } catch (Exception e) {
-          throw new RuntimeException(e);
-      }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +38,6 @@ public class AperturaPuerta extends AppCompatActivity {
 
         textViewNumeroDni = findViewById(R.id.textViewNroDni);
         btnComandoAbrir = findViewById(R.id.btnComandoAbrir);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MQTTManager mqtt = MQTTManager.obtener(this);
-        mqtt.conectar();
-        mqtt.agregarListener(MQTTManager.TOPIC_PUERTA_ESTADO, listenerApertura);
     }
 
     @Override
@@ -73,12 +63,32 @@ public class AperturaPuerta extends AppCompatActivity {
 
     public void abrirPuerta(View v) {
         btnComandoAbrir.setEnabled(false);
-        MQTTManager.obtener(this).publicar(MQTTManager.TOPIC_COMANDO, dni);
+        ApiClient.obtener(this).abrirPuerta().enqueue(new Callback<ResultadoResponse>() {
+            @Override
+            public void onResponse(Call<ResultadoResponse> call, Response<ResultadoResponse> respuesta) {
+                if (respuesta.isSuccessful()) {
+                    mostrarResultado("Abriendo puerta", Color.GREEN);
+                } else if (ApiClient.sesionRechazada(respuesta)) {
+                    SesionHelper.cerrarSesionYVolverAlLogin(AperturaPuerta.this);
+                    return;
+                } else {
+                    // 503 = el servidor no tiene conexión con el broker MQTT
+                    mostrarResultado(ApiClient.mensajeDeError(respuesta, "No se pudo abrir la puerta"), Color.RED);
+                }
+                btnComandoAbrir.setEnabled(true);
+            }
+
+            @Override
+            public void onFailure(Call<ResultadoResponse> call, Throwable t) {
+                mostrarResultado("No se pudo conectar con el servidor", Color.RED);
+                btnComandoAbrir.setEnabled(true);
+            }
+        });
     }
 
-    public void mostrarPuertaAbierta() {
-        textViewNumeroDni.setText("Abriendo puerta");
-        textViewNumeroDni.setTextColor(Color.GREEN);
+    private void mostrarResultado(String mensaje, int color) {
+        textViewNumeroDni.setText(mensaje);
+        textViewNumeroDni.setTextColor(color);
     }
 
     private void mostrarAvisoSesionFallida(String mensaje) {

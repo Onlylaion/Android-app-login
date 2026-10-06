@@ -25,14 +25,8 @@ public class ActividadMenu extends AppCompatActivity {
     }
 
     public void cerrarSesion(View v) {
-        SesionHelper.cerrarSesion(this);
-        MQTTManager.obtener(this).desconectar();
         //SesionHelper.restarPersonaEnGym(this);
-        Intent intento = new Intent(this, MainActivity.class);
-        //intento.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intento.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intento);
-        finish();
+        SesionHelper.cerrarSesionYVolverAlLogin(this);
     }
 
     public void verPersonasEnGym(View v) {
