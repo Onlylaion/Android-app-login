@@ -24,20 +24,26 @@ import info.mqtt.android.service.MqttAndroidClient;
 public final class MQTTManager {
 
     private static final String TAG = "MQTT";
-    private static final String BROKER_URI = "tcp://192.168.0.7:1883";
+    private static final String BROKER_URI = "wss://soa.alfatechnologies.com.ar:443/mqtt";
     private static final String PREFS_NOMBRE = "mqtt_prefs";
     private static final String CLAVE_CLIENT_ID = "client_id";
 
-    public static final String TOPIC_PUERTA_ESTADO = "gimnasio/puerta/apertura";
+    public static final String TOPIC_PUERTA_ESTADO = "GIM/PuertaAbierta";
 
-    public static final String TOPIC_COMANDO = "gimnasio/puerta/comando";
+    public static final String TOPIC_COMANDO = "GIM/abrirPuertaAndroid";
 
     public static final String TOPIC_OCUPACION = "gimnasio/ocupacion/cantidad";
 
-    private static final String[] TOPICS_SUSCRIPCION = {TOPIC_PUERTA_ESTADO, TOPIC_OCUPACION, TOPIC_COMANDO};
+    private static final String[] TOPICS_SUSCRIPCION = {TOPIC_PUERTA_ESTADO, TOPIC_OCUPACION};
 
     public interface Listener {
         void onMensaje(String topic, String payload);
+    }
+
+    public enum Estado { CONECTANDO, CONECTADO, RECONECTANDO, SIN_CONEXION }
+
+    public interface EstadoListener {
+        void onEstado(Estado estado);
     }
 
     private static MQTTManager instancia;
@@ -46,6 +52,8 @@ public final class MQTTManager {
     private final Map<String, List<Listener>> listenersPorTopic = new ConcurrentHashMap<>();
     private final Map<String, String> ultimoValor = new ConcurrentHashMap<>();
     private final Handler hiloPrincipal = new Handler(Looper.getMainLooper());
+    private final List<EstadoListener> estadoListeners = new CopyOnWriteArrayList<>();
+    private volatile Estado estado = Estado.SIN_CONEXION;
     private volatile boolean conectando = false;
 
     public static synchronized MQTTManager obtener(Context context) {
@@ -73,6 +81,7 @@ public final class MQTTManager {
             @Override
             public void connectComplete(boolean reconexion, String serverURI) {
                 Log.d(TAG, reconexion ? "Reconectado al broker" : "Conectado al broker");
+                cambiarEstado(Estado.CONECTADO);
                 for (String topic : TOPICS_SUSCRIPCION) {
                     cliente.subscribe(topic, 0);
                 }
@@ -98,6 +107,7 @@ public final class MQTTManager {
             @Override
             public void connectionLost(Throwable cause) {
                 Log.e(TAG, "Se perdió la conexión", cause);
+                cambiarEstado(Estado.RECONECTANDO); // la reconexión automática ya está activada
             }
 
             @Override
@@ -111,9 +121,11 @@ public final class MQTTManager {
             return;
         }
         conectando = true;
+        cambiarEstado(Estado.CONECTANDO);
 
         MqttConnectOptions opciones = new MqttConnectOptions();
         opciones.setAutomaticReconnect(true);
+        opciones.setKeepAliveInterval(20); // ping cada 20 s para que el proxy (Cloudflare) no cierre la conexión por inactividad
         opciones.setCleanSession(true);
 
         cliente.connect(opciones, null, new IMqttActionListener() {
@@ -126,6 +138,7 @@ public final class MQTTManager {
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                 conectando = false;
                 Log.e(TAG, "Fallo la conexión", exception);
+                cambiarEstado(Estado.SIN_CONEXION);
             }
         });
     }
@@ -135,14 +148,35 @@ public final class MQTTManager {
             cliente.disconnect();
         }
         ultimoValor.clear();
+        cambiarEstado(Estado.SIN_CONEXION);
     }
 
-    public void publicar(String topic, String payload) {
+    // devuelve false si no había conexión y el mensaje no se envió
+    public boolean publicar(String topic, String payload) {
         if (!cliente.isConnected()) {
             Log.w(TAG, "No se publicó en " + topic + ": sin conexión");
-            return;
+            return false;
         }
         cliente.publish(topic, new MqttMessage(payload.getBytes()));
+        return true;
+    }
+
+    private void cambiarEstado(Estado nuevo) {
+        estado = nuevo;
+        hiloPrincipal.post(() -> {
+            for (EstadoListener l : estadoListeners) {
+                l.onEstado(nuevo);
+            }
+        });
+    }
+
+    public void agregarEstadoListener(EstadoListener listener) {
+        estadoListeners.add(listener);
+        listener.onEstado(estado); // el nuevo listener recibe enseguida el estado actual
+    }
+
+    public void quitarEstadoListener(EstadoListener listener) {
+        estadoListeners.remove(listener);
     }
 
     public void agregarListener(String topic, Listener listener) {
