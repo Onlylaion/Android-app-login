@@ -59,4 +59,8 @@ public class VerPagos extends AppCompatActivity {
         Intent intento = new Intent(this, ActividadMenu.class);
         startActivity(intento);
     }
+
+    public void backToMenuFromAperturaPuerta(View v) {
+        Regresar(v);
+    }
 }

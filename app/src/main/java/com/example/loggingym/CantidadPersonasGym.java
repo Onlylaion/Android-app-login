@@ -68,6 +68,10 @@ public class CantidadPersonasGym extends AppCompatActivity {
         finish();
     }
 
+    public void backToMenuFromAperturaPuerta(View v) {
+        regresar(v);
+    }
+
     // total = lo que reporta el sensor + la gente logueada en la app ahora mismo
     private void actualizarVista(int lecturaSensor) {
         int total = lecturaSensor + SesionHelper.obtenerPersonasEnGym(this);
