@@ -18,13 +18,6 @@ public class AperturaPuerta extends AppCompatActivity {
     private TextView textViewNumeroDni;
     private Button btnComandoAbrir;
 
-    private final MQTTManager.Listener listenerApertura = (topic, payload) -> {
-      try {
-          mostrarPuertaAbierta();
-      } catch (Exception e) {
-          throw new RuntimeException(e);
-      }
-    };
 
 
     @Override
@@ -47,7 +40,6 @@ public class AperturaPuerta extends AppCompatActivity {
         super.onStart();
         MQTTManager mqtt = MQTTManager.obtener(this);
         mqtt.conectar();
-        mqtt.agregarListener(MQTTManager.TOPIC_PUERTA_ESTADO, listenerApertura);
     }
 
     @Override
@@ -74,6 +66,7 @@ public class AperturaPuerta extends AppCompatActivity {
     public void abrirPuerta(View v) {
         btnComandoAbrir.setEnabled(false);
         MQTTManager.obtener(this).publicar(MQTTManager.TOPIC_COMANDO, dni);
+        mostrarPuertaAbierta();
     }
 
     public void mostrarPuertaAbierta() {

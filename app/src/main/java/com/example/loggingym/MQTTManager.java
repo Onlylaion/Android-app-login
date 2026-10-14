@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.os.HandlerThread;
+
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -24,17 +26,15 @@ import info.mqtt.android.service.MqttAndroidClient;
 public final class MQTTManager {
 
     private static final String TAG = "MQTT";
-    private static final String BROKER_URI = "tcp://192.168.0.7:1883";
+    private static final String BROKER_URI = "wss://soa.alfatechnologies.com.ar/mqtt";
     private static final String PREFS_NOMBRE = "mqtt_prefs";
     private static final String CLAVE_CLIENT_ID = "client_id";
 
-    public static final String TOPIC_PUERTA_ESTADO = "gimnasio/puerta/apertura";
+    public static final String TOPIC_COMANDO = "gimnasio/puerta/abrirPuerta";
 
-    public static final String TOPIC_COMANDO = "gimnasio/puerta/comando";
+    public static final String TOPIC_OCUPACION = "gimnasio/cantidadPersonas";
 
-    public static final String TOPIC_OCUPACION = "gimnasio/ocupacion/cantidad";
-
-    private static final String[] TOPICS_SUSCRIPCION = {TOPIC_PUERTA_ESTADO, TOPIC_OCUPACION, TOPIC_COMANDO};
+    private static final String[] TOPICS_SUSCRIPCION = {TOPIC_OCUPACION};
 
     public interface Listener {
         void onMensaje(String topic, String payload);
@@ -45,8 +45,11 @@ public final class MQTTManager {
     private final MqttAndroidClient cliente;
     private final Map<String, List<Listener>> listenersPorTopic = new ConcurrentHashMap<>();
     private final Map<String, String> ultimoValor = new ConcurrentHashMap<>();
-    private final Handler hiloPrincipal = new Handler(Looper.getMainLooper());
+    private final HandlerThread hiloMqtt = new HandlerThread("MQTTManager-Hilo");
+    private final Handler hiloSecundario;
     private volatile boolean conectando = false;
+
+
 
     public static synchronized MQTTManager obtener(Context context) {
         if (instancia == null) {
@@ -66,6 +69,8 @@ public final class MQTTManager {
     }
 
     private MQTTManager(Context appContext) {
+        hiloMqtt.start();
+        hiloSecundario = new Handler(hiloMqtt.getLooper());
         cliente = new MqttAndroidClient(appContext, BROKER_URI, obtenerClientId(appContext));
 
         cliente.setCallback(new MqttCallbackExtended() {
@@ -88,7 +93,7 @@ public final class MQTTManager {
                 if (listeners == null) {
                     return;
                 }
-                hiloPrincipal.post(() -> {
+                hiloSecundario.post(() -> {
                     for (Listener l : listeners) {
                         l.onMensaje(topic, payload);
                     }
@@ -143,6 +148,7 @@ public final class MQTTManager {
             return;
         }
         cliente.publish(topic, new MqttMessage(payload.getBytes()));
+        Log.d(TAG, "Publicado en " + topic + ": " + payload);
     }
 
     public void agregarListener(String topic, Listener listener) {
@@ -150,9 +156,9 @@ public final class MQTTManager {
                 .computeIfAbsent(topic, t -> new CopyOnWriteArrayList<>())
                 .add(listener);
 
-        String ultimo = ultimoValor.get(topic); // Se le envía al nuevo listener el último valor registrado si lo hubiera
+        String ultimo = ultimoValor.get(topic);
         if (ultimo != null) {
-            listener.onMensaje(topic, ultimo);
+            hiloSecundario.post(() -> listener.onMensaje(topic, ultimo));
         }
     }
 

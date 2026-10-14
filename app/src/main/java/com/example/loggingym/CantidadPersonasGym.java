@@ -14,6 +14,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONObject;
+import org.json.JSONException;
+
 public class CantidadPersonasGym extends AppCompatActivity {
 
     private static final int CAPACIDAD_MAXIMA = 50;
@@ -25,9 +28,11 @@ public class CantidadPersonasGym extends AppCompatActivity {
 
     private final MQTTManager.Listener listenerOcupacion = (topic, payload) -> {
         try {
-            actualizarVista(Integer.parseInt(payload));
-        } catch (NumberFormatException e) {
-            Log.e("MQTT", "Payload no numérico: " + payload, e);
+            JSONObject json = new JSONObject(payload);
+            int lectura = json.isNull("cantidadPersonasActual") ? 0 : json.getInt("cantidadPersonasActual");
+            runOnUiThread(() -> actualizarVista(lectura));
+        } catch (JSONException e) {
+            Log.e("MQTT", "Payload inválido: " + payload, e);
         }
     };
 
