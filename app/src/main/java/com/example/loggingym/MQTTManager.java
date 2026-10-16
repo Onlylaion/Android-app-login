@@ -40,6 +40,13 @@ public final class MQTTManager {
         void onMensaje(String topic, String payload);
     }
 
+    public enum Estado { CONECTANDO, CONECTADO, RECONECTANDO, SIN_CONEXION }
+
+    // se llama en hiloSecundario: si toca vistas, usar runOnUiThread
+    public interface EstadoListener {
+        void onEstado(Estado estado);
+    }
+
     private static MQTTManager instancia;
 
     private final MqttAndroidClient cliente;
@@ -47,6 +54,8 @@ public final class MQTTManager {
     private final Map<String, String> ultimoValor = new ConcurrentHashMap<>();
     private final HandlerThread hiloMqtt = new HandlerThread("MQTTManager-Hilo");
     private final Handler hiloSecundario;
+    private final List<EstadoListener> estadoListeners = new CopyOnWriteArrayList<>();
+    private volatile Estado estado = Estado.SIN_CONEXION;
     private volatile boolean conectando = false;
 
 
@@ -78,6 +87,7 @@ public final class MQTTManager {
             @Override
             public void connectComplete(boolean reconexion, String serverURI) {
                 Log.d(TAG, reconexion ? "Reconectado al broker" : "Conectado al broker");
+                cambiarEstado(Estado.CONECTADO);
                 for (String topic : TOPICS_SUSCRIPCION) {
                     cliente.subscribe(topic, 0);
                 }
@@ -103,6 +113,7 @@ public final class MQTTManager {
             @Override
             public void connectionLost(Throwable cause) {
                 Log.e(TAG, "Se perdió la conexión", cause);
+                cambiarEstado(Estado.RECONECTANDO); // la reconexión automática ya está activada
             }
 
             @Override
@@ -116,9 +127,11 @@ public final class MQTTManager {
             return;
         }
         conectando = true;
+        cambiarEstado(Estado.CONECTANDO);
 
         MqttConnectOptions opciones = new MqttConnectOptions();
         opciones.setAutomaticReconnect(true);
+        opciones.setKeepAliveInterval(20); // ping cada 20 s para que el proxy (Cloudflare) no cierre la conexión por inactividad
         opciones.setCleanSession(true);
 
         cliente.connect(opciones, null, new IMqttActionListener() {
@@ -131,6 +144,7 @@ public final class MQTTManager {
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                 conectando = false;
                 Log.e(TAG, "Fallo la conexión", exception);
+                cambiarEstado(Estado.SIN_CONEXION);
             }
         });
     }
@@ -140,15 +154,37 @@ public final class MQTTManager {
             cliente.disconnect();
         }
         ultimoValor.clear();
+        cambiarEstado(Estado.SIN_CONEXION);
     }
 
-    public void publicar(String topic, String payload) {
+    // devuelve false si no había conexión y el mensaje no se envió
+    public boolean publicar(String topic, String payload) {
         if (!cliente.isConnected()) {
             Log.w(TAG, "No se publicó en " + topic + ": sin conexión");
-            return;
+            return false;
         }
         cliente.publish(topic, new MqttMessage(payload.getBytes()));
         Log.d(TAG, "Publicado en " + topic + ": " + payload);
+        return true;
+    }
+
+    private void cambiarEstado(Estado nuevo) {
+        estado = nuevo;
+        hiloSecundario.post(() -> {
+            for (EstadoListener l : estadoListeners) {
+                l.onEstado(nuevo);
+            }
+        });
+    }
+
+    public void agregarEstadoListener(EstadoListener listener) {
+        estadoListeners.add(listener);
+        Estado actual = estado;
+        hiloSecundario.post(() -> listener.onEstado(actual)); // el nuevo listener recibe el estado actual
+    }
+
+    public void quitarEstadoListener(EstadoListener listener) {
+        estadoListeners.remove(listener);
     }
 
     public void agregarListener(String topic, Listener listener) {
