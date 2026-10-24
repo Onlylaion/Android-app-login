@@ -12,11 +12,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.loggingym.api.ApiClient;
+import com.example.loggingym.api.LoginResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText campoDni;
     private EditText campoContrasenia;
     private TextView textoError;
+    private Button botonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +47,11 @@ public class MainActivity extends AppCompatActivity {
         campoContrasenia = findViewById(R.id.input_contrasenia);
         textoError = findViewById(R.id.texto_error);
 
-        Button botonLogin = findViewById(R.id.boton_login);
+        botonLogin = findViewById(R.id.boton_login);
         botonLogin.setOnClickListener(v -> intentarLogin());
+
+        Button botonIrRegistro = findViewById(R.id.boton_ir_registro);
+        botonIrRegistro.setOnClickListener(v -> startActivity(new Intent(this, RegistroActivity.class)));
     }
 
     private void intentarLogin() {
@@ -52,17 +63,39 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Usuario usuario = AppDatabase.obtenerInstancia(this).usuarioDao().validarLogin(dni, contrasenia);
+        textoError.setVisibility(TextView.GONE);
+        botonLogin.setEnabled(false);
 
-        if (usuario == null) {
-            mostrarError("DNI o contraseña incorrectos");
-            return;
-        }
+        ApiClient.obtener().obtenerLoginApi().login(dni, contrasenia).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                botonLogin.setEnabled(true);
+                LoginResponse cuerpo = response.body();
 
-        SesionHelper.saveUsuario(this, usuario.dni);
+                if (response.isSuccessful() && cuerpo != null && cuerpo.ok) {
+                    loginExitoso(dni, cuerpo.nombre);
+                } else if (response.code() == 401) {
+                    mostrarError("DNI o contraseña incorrectos");
+                } else if (response.code() == 400) {
+                    mostrarError("Datos inválidos");
+                } else {
+                    mostrarError("Error del servidor (" + response.code() + ")");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                botonLogin.setEnabled(true);
+                mostrarError("No se pudo conectar con el servidor");
+            }
+        });
+    }
+
+    private void loginExitoso(String dni, String nombre) {
+        SesionHelper.saveUsuario(this, dni);
         //SesionHelper.sumarPersonaEnGym(this);
         AppDatabase.obtenerInstancia(this).ingresoAppDao()
-                .registrarIngreso(new IngresoApp(usuario.dni, usuario.nombre, System.currentTimeMillis()));
+                .registrarIngreso(new IngresoApp(dni, nombre, System.currentTimeMillis()));
 
         irAMenuPrincipal();
     }
