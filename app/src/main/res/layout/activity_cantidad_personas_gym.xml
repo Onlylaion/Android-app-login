@@ -1,67 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:layoutAnimation="@anim/cascada"
+    android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".CantidadPersonasGym">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_cantidad"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/button7"
+        style="@style/Boton.Volver"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button7"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.4">
+        android:onClick="regresar"
+        android:text="Regresar" />
+
+    <TextView
+        style="@style/Texto.Titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Personas en el gym" />
+
+    <TextView
+        style="@style/Texto.Subtitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Se actualiza en tiempo real" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_cantidad"
+        style="@style/Tarjeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
-            android:padding="24dp">
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <FrameLayout
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/circulo_suave">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_group"
+                    app:tint="@color/primario" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/texto_cantidad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="— / 50"
-                android:textSize="64sp"
+                android:textColor="@color/texto"
+                android:textSize="56sp"
                 android:textStyle="bold" />
 
             <TextView
+                style="@style/Texto.Subtitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="personas en el gimnasio ahora" />
 
             <ProgressBar
                 android:id="@+id/barra_ocupacion"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_marginTop="24dp"
+                android:maxHeight="12dp"
+                android:minHeight="12dp"
+                android:progress="0"
+                android:progressDrawable="@drawable/barra_progreso" />
+
+            <!-- Referencia de colores de la barra -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:progress="0" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
+                <TextView
+                    style="@style/Texto.ItemDetalle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tranquilo" />
+
+                <TextView
+                    style="@style/Texto.ItemDetalle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Moderado" />
+
+                <TextView
+                    style="@style/Texto.ItemDetalle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="Lleno" />
+            </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        android:onClick="backToMenuFromAperturaPuerta"
-        android:text="Regresar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

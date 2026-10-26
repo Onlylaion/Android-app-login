@@ -1,7 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.LogginGym" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-    </style>
+<resources>
+    <!-- El tema es el mismo que en values/themes.xml (DayNight).
+         Los colores oscuros salen de values-night/colors.xml. -->
 </resources>

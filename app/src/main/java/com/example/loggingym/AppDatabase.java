@@ -45,6 +45,9 @@ public abstract class AppDatabase extends RoomDatabase {
             if (db.usuarioDao().validarLogin("87654321", "1212") == null) {
                 db.usuarioDao().insertar(new Usuario("87654321", "1212", "Leon"));
             }
+            if (db.usuarioDao().validarLogin("1212", "1212") == null) {
+                db.usuarioDao().insertar(new Usuario("1212", "1212", "Usuario 1212"));
+            }
         }).start();
     }
 }

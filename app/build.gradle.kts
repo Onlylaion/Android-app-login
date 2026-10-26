@@ -49,4 +49,7 @@ dependencies {
 
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    //ubicación para los servicios de Google Play(GeofencingClient, FusedLocationProviderClient)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }

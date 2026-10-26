@@ -2,9 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Permisos de MQTT -->
+    <uses-permission android:name="android.permission.INTERNET" />              <!-- conectarse a internet (broker MQTT) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />  <!-- saber si hay conexión -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />             <!-- mantener el servicio MQTT despierto -->
+
+    <!-- Permisos para la geocerca -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />       <!-- ubicación precisa (GPS): sin esto la geocerca no se registra -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />     <!-- ubicación aproximada: Android 12+ la exige junto a la precisa -->
+    <!-- exigencia de android 10 en adelante -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- ubicación con la app cerrada: obligatorio para que la geocerca dispare -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />         <!-- mostrar notificaciones (Android 13+) -->
 
     <application
         android:allowBackup="true"
@@ -39,6 +47,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <service android:name="info.mqtt.android.service.MqttService" />
+
+        <!-- Recibe los avisos de entrada/salida de la geocerca; solo Android puede llamarlo -->
+        <receiver
+            android:name=".GeofenceReceiver"
+            android:exported="false" />
 
         <activity
             android:name=".AperturaPuerta"

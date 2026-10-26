@@ -1,47 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:fillViewport="true"
     tools:context=".ActividadMenu">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom|center_horizontal|top|center_vertical|fill_vertical"
+        android:layout_height="wrap_content"
+        android:layoutAnimation="@anim/cascada"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="-134dp"
-        tools:layout_editor_absoluteY="-84dp">
+        android:padding="20dp">
 
-        <Button
+        <TextView
+            style="@style/Texto.Titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:text="Hola" />
+
+        <!-- Opción: abrir puerta -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnAbrirPuerta"
-            android:layout_width="wrap_content"
+            style="@style/Tarjeta"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="goToActivityAperturaPuerta"
-            android:text="Abrir Puerta" />
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="goToActivityAperturaPuerta">
 
-        <Button
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <FrameLayout
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/circulo_suave">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_lock_open"
+                        app:tint="@color/primario" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.ItemTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Abrir puerta" />
+
+                    <TextView
+                        style="@style/Texto.ItemDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Entrá al gimnasio con tu celular" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/texto_secundario" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Opción: personas en el gimnasio -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button4"
-            android:layout_width="wrap_content"
+            style="@style/Tarjeta"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="clip_horizontal|center"
-            android:onClick="verPersonasEnGym"
-            android:text="Ver la cantidad de personas en el gym ahora" />
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="verPersonasEnGym">
 
-        <Button
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <FrameLayout
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/circulo_suave">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_group"
+                        app:tint="@color/primario" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.ItemTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Personas en el gym" />
+
+                    <TextView
+                        style="@style/Texto.ItemDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Mirá cuánta gente hay ahora" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/texto_secundario" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Opción: pagos -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button5"
-            android:layout_width="wrap_content"
+            style="@style/Tarjeta"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="verPagos"
-            android:text="Ver Pagos" />
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="verPagos">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <FrameLayout
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/circulo_suave">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_credit_card"
+                        app:tint="@color/primario" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.ItemTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mis pagos" />
+
+                    <TextView
+                        style="@style/Texto.ItemDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Historial y pago de la cuota" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/texto_secundario" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Cerrar sesión: discreto, en rojo -->
         <Button
             android:id="@+id/button6"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:onClick="cerrarSesion"
-            android:text="Salir" />
+            android:text="Cerrar sesión"
+            android:textAllCaps="false"
+            android:textColor="@color/rojo"
+            app:icon="@drawable/ic_logout"
+            app:iconTint="@color/rojo" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
