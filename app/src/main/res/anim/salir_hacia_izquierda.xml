@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pantalla anterior: se corre un poco a la izquierda y se apaga -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="280"
+    android:interpolator="@android:anim/decelerate_interpolator">
+    <translate android:fromXDelta="0" android:toXDelta="-8%" />
+    <alpha android:fromAlpha="1" android:toAlpha="0.4" />
+</set>

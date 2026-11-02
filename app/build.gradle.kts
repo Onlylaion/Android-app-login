@@ -50,6 +50,9 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
+    //ubicación para los servicios de Google Play(GeofencingClient, FusedLocationProviderClient)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+
     // Cliente HTTP para la API de Node-RED
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")

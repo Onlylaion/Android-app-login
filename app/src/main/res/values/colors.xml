@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta estilo Mercado Pago (modo claro) -->
+    <color name="primario">#009EE3</color>          <!-- celeste de marca: botones, íconos, acentos -->
+    <color name="primario_oscuro">#007EB5</color>   <!-- celeste más oscuro: texto sobre fondo celeste suave -->
+    <color name="azul_suave">#E6F6FD</color>        <!-- fondo de los círculos de los íconos -->
+    <color name="fondo">#F5F5F5</color>             <!-- gris muy claro de fondo de pantalla -->
+    <color name="superficie">#FFFFFF</color>        <!-- tarjetas -->
+    <color name="texto">#1A1A1A</color>             <!-- texto principal -->
+    <color name="texto_secundario">#737373</color>  <!-- subtítulos y fechas -->
+    <color name="divisor">#EDEDED</color>           <!-- líneas separadoras y fondo de la barra -->
+    <color name="borde">#D9D9D9</color>             <!-- borde de los campos de texto -->
+    <color name="rojo">#F23D4F</color>              <!-- errores y "cerrar sesión" -->
+    <color name="verde">#00A650</color>             <!-- montos / estados OK -->
 </resources>

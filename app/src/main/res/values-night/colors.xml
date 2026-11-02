@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Misma paleta en modo oscuro: solo cambian fondos y textos -->
+    <color name="primario">#009EE3</color>
+    <color name="primario_oscuro">#66C9F0</color>
+    <color name="azul_suave">#0F3446</color>
+    <color name="fondo">#121212</color>
+    <color name="superficie">#1E1E1E</color>
+    <color name="texto">#F2F2F2</color>
+    <color name="texto_secundario">#A6A6A6</color>
+    <color name="divisor">#2C2C2C</color>
+    <color name="borde">#3A3A3A</color>
+    <color name="rojo">#FF6B78</color>
+    <color name="verde">#3DDC84</color>
+</resources>

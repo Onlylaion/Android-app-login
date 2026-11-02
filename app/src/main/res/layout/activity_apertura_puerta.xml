@@ -1,72 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:layoutAnimation="@anim/cascada"
+    android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".AperturaPuerta">
 
     <Button
-        android:id="@+id/btnComandoAbrir"
+        android:id="@+id/btnBackFromAperturaPuerta"
+        style="@style/Boton.Volver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="66dp"
+        android:onClick="backToMenuFromAperturaPuerta"
+        android:text="Regresar" />
+
+    <TextView
+        style="@style/Texto.Titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Abrir puerta" />
+
+    <TextView
+        style="@style/Texto.Subtitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Tocá el botón para entrar al gimnasio" />
+
+    <!-- Tarjeta con el DNI de la sesión -->
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Tarjeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/circulo_suave">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/primario" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textViewDniSesion"
+                style="@style/Texto.ItemDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="DNI" />
+
+            <TextView
+                android:id="@+id/textViewNroDni"
+                style="@style/Texto.ItemTitulo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="número" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Botón grande y redondo para abrir -->
+    <Button
+        android:id="@+id/btnComandoAbrir"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center_horizontal"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:onClick="abrirPuerta"
         android:text="Abrir"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnBackFromAperturaPuerta"
-        app:layout_constraintHorizontal_bias="0.065"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.386" />
-
-    <Button
-        android:id="@+id/btnBackFromAperturaPuerta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="68dp"
-        android:onClick="backToMenuFromAperturaPuerta"
-        android:text="Regresar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.386" />
-
-    <TextView
-        android:id="@+id/textViewDniSesion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DNI:"
-        app:layout_constraintBottom_toTopOf="@+id/btnComandoAbrir"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421" />
-
-    <TextView
-        android:id="@+id/textViewNroDni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:text="número"
-        app:layout_constraintBottom_toTopOf="@+id/btnBackFromAperturaPuerta"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.141"
-        app:layout_constraintStart_toEndOf="@+id/textViewDniSesion"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421" />
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        app:backgroundTint="@color/primario"
+        app:cornerRadius="90dp"
+        app:elevation="6dp"
+        app:icon="@drawable/ic_lock_open"
+        app:iconGravity="textTop"
+        app:iconPadding="8dp"
+        app:iconSize="44dp"
+        app:iconTint="@color/white" />
 
     <TextView
         android:id="@+id/textViewEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:text="Conectando con el servidor…"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnComandoAbrir" />
+        android:textColor="@color/texto_secundario"
+        android:textSize="16sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
