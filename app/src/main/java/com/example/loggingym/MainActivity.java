@@ -49,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         botonLogin = findViewById(R.id.boton_login);
         botonLogin.setOnClickListener(v -> intentarLogin());
-
-        Button botonIrRegistro = findViewById(R.id.boton_ir_registro);
-        botonIrRegistro.setOnClickListener(v -> startActivity(new Intent(this, RegistroActivity.class)));
     }
 
     private void intentarLogin() {
