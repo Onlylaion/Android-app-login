@@ -30,24 +30,9 @@ public abstract class AppDatabase extends RoomDatabase {
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build();
-                    precargarUsuariosDePrueba(instancia);
                 }
             }
         }
         return instancia;
-    }
-
-    private static void precargarUsuariosDePrueba(AppDatabase db) {
-        new Thread(() -> {
-            if (db.usuarioDao().validarLogin("1234567", "1234") == null) {
-                db.usuarioDao().insertar(new Usuario("1234567", "1234", "León"));
-            }
-            if (db.usuarioDao().validarLogin("87654321", "1212") == null) {
-                db.usuarioDao().insertar(new Usuario("87654321", "1212", "Leon"));
-            }
-            if (db.usuarioDao().validarLogin("1212", "1212") == null) {
-                db.usuarioDao().insertar(new Usuario("1212", "1212", "Usuario 1212"));
-            }
-        }).start();
     }
 }
