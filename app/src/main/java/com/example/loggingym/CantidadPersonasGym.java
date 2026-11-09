@@ -75,7 +75,7 @@ public class CantidadPersonasGym extends AppCompatActivity {
 
     // total = lo que reporta el sensor + la gente logueada en la app ahora mismo
     private void actualizarVista(int lecturaSensor) {
-        int total = lecturaSensor + SesionHelper.obtenerPersonasEnGym(this);
+        int total = lecturaSensor;
         textoCantidad.setText(total + " / " + CAPACIDAD_MAXIMA);
         barraOcupacion.setProgress(total);
         barraOcupacion.setProgressTintList(ColorStateList.valueOf(colorSegunOcupacion(total)));

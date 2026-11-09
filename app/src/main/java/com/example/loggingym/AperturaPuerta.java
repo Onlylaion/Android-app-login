@@ -278,7 +278,7 @@ public class AperturaPuerta extends AppCompatActivity {
 
     // "Abrir" solo se habilita con sesión válida, conexión y sin otro pedido en curso
     private void actualizarBoton() {
-        btnComandoAbrir.setEnabled(sesionValida && conectado && !esperandoConfirmacion);
+        btnComandoAbrir.setEnabled(sesionValida && conectado && SesionHelper.dentroDeGeocerca(this) && !esperandoConfirmacion);
     }
 
     private void mostrarAvisoSesionFallida(String mensaje) {

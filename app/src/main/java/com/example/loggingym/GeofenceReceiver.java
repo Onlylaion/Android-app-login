@@ -30,10 +30,12 @@ public class GeofenceReceiver extends BroadcastReceiver {
                 : "\n(sin coordenadas)";
 
         int transicion = evento.getGeofenceTransition();               // qué pasó: entró o salió
-        if (transicion == Geofence.GEOFENCE_TRANSITION_ENTER) {
+        if (transicion == Geofence.GEOFENCE_TRANSITION_ENTER || transicion == Geofence.GEOFENCE_TRANSITION_DWELL) {
             Toast.makeText(context, "Entraste al gimnasio" + coordenadas, Toast.LENGTH_LONG).show();
+            SesionHelper.saveDentroGeocerca(context.getApplicationContext(), true);
         } else if (transicion == Geofence.GEOFENCE_TRANSITION_EXIT) {
             Toast.makeText(context, "Saliste del gimnasio" + coordenadas, Toast.LENGTH_LONG).show();
+            SesionHelper.saveDentroGeocerca(context.getApplicationContext(), false);
         }
     }
 }

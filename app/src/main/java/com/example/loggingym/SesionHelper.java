@@ -8,8 +8,19 @@ public final class SesionHelper {
     private static final String PREFS_NOMBRE = "loggingym_prefs";
     private static final String CLAVE_USUARIO_DNI = "usuario_dni";
     private static final String CLAVE_CANTIDAD_PERSONAS_GYM = "cantidad_personas_gym";
-
+    private static final String CLAVE_USUARIO_UBI = "usuario_ubi";
+    private static final String CLAVE_MODO_OSCURO = "modo_oscuro";
     private SesionHelper() {
+    }
+
+    public static void saveModoOscuro(Context context, boolean activo) {
+        obtenerPrefs(context).edit()
+                .putBoolean(CLAVE_MODO_OSCURO, activo)
+                .apply();
+    }
+
+    public static boolean modoOscuroActivo(Context context) {
+        return obtenerPrefs(context).getBoolean(CLAVE_MODO_OSCURO, false);   // por defecto, modo claro
     }
 
     public static void saveUsuario(Context context, String dni) {
@@ -32,22 +43,16 @@ public final class SesionHelper {
                 .apply();
     }
 
-    public static void sumarPersonaEnGym(Context context) {
-        int actual = obtenerPersonasEnGym(context);
+    public static void saveDentroGeocerca(Context context, boolean dentro) {
         obtenerPrefs(context).edit()
-                .putInt(CLAVE_CANTIDAD_PERSONAS_GYM, actual + 1)
+                .putString(CLAVE_USUARIO_UBI, String.valueOf(dentro))
                 .apply();
     }
 
-    public static void restarPersonaEnGym(Context context) {
-        int actual = obtenerPersonasEnGym(context);
-        obtenerPrefs(context).edit()
-                .putInt(CLAVE_CANTIDAD_PERSONAS_GYM, Math.max(0, actual - 1))
-                .apply();
-    }
+    public static boolean dentroDeGeocerca(Context context) {
+        String res = obtenerPrefs(context).getString(CLAVE_USUARIO_UBI, null);
 
-    public static int obtenerPersonasEnGym(Context context) {
-        return obtenerPrefs(context).getInt(CLAVE_CANTIDAD_PERSONAS_GYM, 0);
+        return res != null && !res.equals("false");
     }
 
     private static SharedPreferences obtenerPrefs(Context context) {

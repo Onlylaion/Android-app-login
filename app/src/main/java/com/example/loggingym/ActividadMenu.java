@@ -10,7 +10,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.materialswitch.MaterialSwitch;
+
 public class ActividadMenu extends AppCompatActivity {
+
+    private MaterialSwitch switchModoOscuro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,13 @@ public class ActividadMenu extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        switchModoOscuro = findViewById(R.id.switchModoOscuro);
+        switchModoOscuro.setChecked(SesionHelper.modoOscuroActivo(this));   // refleja el valor guardado
+        switchModoOscuro.setOnCheckedChangeListener((boton, activo) -> {
+            SesionHelper.saveModoOscuro(this, activo);
+            GymApp.aplicarTema(activo);
         });
     }
 
@@ -39,9 +50,10 @@ public class ActividadMenu extends AppCompatActivity {
         Intent intento = new Intent(this, CantidadPersonasGym.class);
         startActivity(intento);
     }
-    public void verPagos(View v) {
-        Intent intento = new Intent(this, VerPagos.class);
-        startActivity(intento);
+
+    // Tocar cualquier parte de la tarjeta equivale a tocar el interruptor
+    public void alternarModoOscuro(View v) {
+        switchModoOscuro.toggle();
     }
 
     public void goToActivityAperturaPuerta(View v) {
