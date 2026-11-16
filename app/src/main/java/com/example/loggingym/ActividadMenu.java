@@ -3,6 +3,7 @@ package com.example.loggingym;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 public class ActividadMenu extends AppCompatActivity {
 
     private MaterialSwitch switchModoOscuro;
+    private TextView saludo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,13 @@ public class ActividadMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        saludo = findViewById(R.id.textViewSaludo);
+        String nombre = getIntent().getStringExtra("Nombre");
+        if (nombre == null) {
+            nombre = SesionHelper.obtenerNombreUsuarioActual(this);
+        }
+        saludo.append(", " + nombre);
 
         switchModoOscuro = findViewById(R.id.switchModoOscuro);
         switchModoOscuro.setChecked(SesionHelper.modoOscuroActivo(this));   // refleja el valor guardado

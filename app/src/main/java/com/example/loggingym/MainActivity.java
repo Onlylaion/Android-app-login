@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText campoContrasenia;
     private TextView textoError;
     private Button botonLogin;
+    private String nombreYAp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 LoginResponse cuerpo = response.body();
 
                 if (response.isSuccessful() && cuerpo != null && cuerpo.ok) {
-                    loginExitoso(dni);
+                    loginExitoso(dni, cuerpo.nombre);
                 } else if (response.code() == 401) {
                     mostrarError("DNI o contraseña incorrectos");
                 } else if (response.code() == 400) {
@@ -91,8 +92,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loginExitoso(String dni) {
-        SesionHelper.saveUsuario(this, dni);
+    private void loginExitoso(String dni, String nombreUsuario) {
+        SesionHelper.saveUsuario(this, dni, nombreUsuario);
+        this.nombreYAp = nombreUsuario;
         irAMenuPrincipal();
     }
 
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void irAMenuPrincipal() {
         Intent intento = new Intent(this, ActividadMenu.class);
+        intento.putExtra("Nombre", this.nombreYAp);
         startActivity(intento);
         finish();
     }

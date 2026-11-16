@@ -97,7 +97,7 @@ public class AperturaPuerta extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        this.dni = SesionHelper.obtenerUsuarioActual(this);   // lee el usuario guardado al loguearse
+        this.dni = SesionHelper.obtenerDniUsuarioActual(this);   // lee el usuario guardado al loguearse
         sesionValida = false;
 
         if (this.dni == null) {                               // nadie logueado

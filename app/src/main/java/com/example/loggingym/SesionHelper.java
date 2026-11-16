@@ -7,6 +7,7 @@ public final class SesionHelper {
 
     private static final String PREFS_NOMBRE = "loggingym_prefs";
     private static final String CLAVE_USUARIO_DNI = "usuario_dni";
+    private static  final String CLAVE_USUARIO_NOMBRE = "usuario_nombre";
     private static final String CLAVE_USUARIO_UBI = "usuario_ubi";
     private static final String CLAVE_MODO_OSCURO = "modo_oscuro";
     private SesionHelper() {
@@ -22,23 +23,30 @@ public final class SesionHelper {
         return obtenerPrefs(context).getBoolean(CLAVE_MODO_OSCURO, false);   // por defecto, modo claro
     }
 
-    public static void saveUsuario(Context context, String dni) {
+    public static void saveUsuario(Context context, String dni, String nombre) {
         obtenerPrefs(context).edit()
                 .putString(CLAVE_USUARIO_DNI, dni)
+                .putString(CLAVE_USUARIO_NOMBRE, nombre)
                 .apply();
     }
 
-    public static String obtenerUsuarioActual(Context context) {
+    public static String obtenerDniUsuarioActual(Context context) {
         return obtenerPrefs(context).getString(CLAVE_USUARIO_DNI, null);
     }
 
+    public static String obtenerNombreUsuarioActual(Context context) {
+        return obtenerPrefs(context).getString(CLAVE_USUARIO_NOMBRE, null);
+    }
+
     public static boolean haySesionActiva(Context context) {
-        return obtenerUsuarioActual(context) != null;
+        return obtenerDniUsuarioActual(context) != null;
     }
 
     public static void cerrarSesion(Context context) {
         obtenerPrefs(context).edit()
                 .remove(CLAVE_USUARIO_DNI)
+                .remove(CLAVE_USUARIO_NOMBRE)
+                .remove(CLAVE_USUARIO_UBI)
                 .apply();
     }
 
