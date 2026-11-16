@@ -68,17 +68,14 @@ public class CantidadPersonasGym extends AppCompatActivity {
         super.onStop();
     }
     public void regresar(View v){
-        /*Intent intento = new Intent(this, ActividadMenu.class);
-        startActivity(intento);*/
         finish();
     }
 
-    // total = lo que reporta el sensor + la gente logueada en la app ahora mismo
-    private void actualizarVista(int lecturaSensor) {
-        int total = lecturaSensor;
-        textoCantidad.setText(total + " / " + CAPACIDAD_MAXIMA);
-        barraOcupacion.setProgress(total);
-        barraOcupacion.setProgressTintList(ColorStateList.valueOf(colorSegunOcupacion(total)));
+    // muestra la cantidad de personas que reporta el sensor
+    private void actualizarVista(int cantidad) {
+        textoCantidad.setText(cantidad + " / " + CAPACIDAD_MAXIMA);
+        barraOcupacion.setProgress(cantidad);
+        barraOcupacion.setProgressTintList(ColorStateList.valueOf(colorSegunOcupacion(cantidad)));
     }
 
     // menos de 60% ocupado: verde, entre 60% y 85%: amarillo, más de 85%: rojo

@@ -3,7 +3,6 @@ package com.example.loggingym;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.os.HandlerThread;
 

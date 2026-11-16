@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 LoginResponse cuerpo = response.body();
 
                 if (response.isSuccessful() && cuerpo != null && cuerpo.ok) {
-                    loginExitoso(dni, cuerpo.nombre);
+                    loginExitoso(dni);
                 } else if (response.code() == 401) {
                     mostrarError("DNI o contraseña incorrectos");
                 } else if (response.code() == 400) {
@@ -91,12 +91,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loginExitoso(String dni, String nombre) {
+    private void loginExitoso(String dni) {
         SesionHelper.saveUsuario(this, dni);
-        //SesionHelper.sumarPersonaEnGym(this);
-        AppDatabase.obtenerInstancia(this).ingresoAppDao()
-                .registrarIngreso(new IngresoApp(dni, nombre, System.currentTimeMillis()));
-
         irAMenuPrincipal();
     }
 

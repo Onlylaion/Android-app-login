@@ -44,12 +44,6 @@ dependencies {
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("com.github.hannesa2:paho.mqtt.android:4.5")
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-
     //ubicación para los servicios de Google Play(GeofencingClient, FusedLocationProviderClient)
     implementation("com.google.android.gms:play-services-location:21.3.0")
 

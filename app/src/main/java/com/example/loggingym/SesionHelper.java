@@ -7,7 +7,6 @@ public final class SesionHelper {
 
     private static final String PREFS_NOMBRE = "loggingym_prefs";
     private static final String CLAVE_USUARIO_DNI = "usuario_dni";
-    private static final String CLAVE_CANTIDAD_PERSONAS_GYM = "cantidad_personas_gym";
     private static final String CLAVE_USUARIO_UBI = "usuario_ubi";
     private static final String CLAVE_MODO_OSCURO = "modo_oscuro";
     private SesionHelper() {

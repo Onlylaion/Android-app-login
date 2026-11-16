@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />     <!-- ubicación aproximada: Android 12+ la exige junto a la precisa -->
     <!-- exigencia de android 10 en adelante -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- ubicación con la app cerrada: obligatorio para que la geocerca dispare -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />         <!-- mostrar notificaciones (Android 13+) -->
 
     <application
         android:name=".GymApp"
