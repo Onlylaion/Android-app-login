@@ -105,11 +105,6 @@ public class AperturaPuerta extends AppCompatActivity {
             return;
         }
 
-        if (this.dni.length() >= 9) {                         // un DNI argentino no tiene más de 8 dígitos
-            mostrarAvisoSesionFallida("DNI inválido");
-            return;
-        }
-
         textViewNumeroDni.setText(dni);
         textViewNumeroDni.setTextColor(ContextCompat.getColor(this, R.color.texto)); // color del tema (se ve en modo claro y oscuro)
         sesionValida = true;
